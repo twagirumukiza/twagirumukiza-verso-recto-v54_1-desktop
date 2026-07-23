@@ -1,0 +1,82 @@
+{
+  "name": "verso-recto",
+  "version": "54.1.0",
+  "private": true,
+  "description": "Verso Recto — jeu de stratégie abstrait. Local (humain/IA) et multijoueur en ligne.",
+  "author": {
+    "name": "Innocent Twagirumukiza",
+    "email": "you@example.com"
+  },
+  "homepage": "https://github.com/twagirumukiza/verso-recto-v54_1-desktop",
+  "main": "electron/main.js",
+  "scripts": {
+    "test": "node tests/smoke-test.js && node tests/path-planner-test.js && node tests/integration-test.js && node tests/online-forfeit-test.js && node tests/local-persistence-test.js && node tests/online-persistence-test.js && node tests/tournament-test.js && node tests/online-tournament-test.js",
+    "start": "electron .",
+    "dist": "electron-builder --win --linux --publish=never",
+    "dist:win": "electron-builder --win --publish=never",
+    "dist:linux": "electron-builder --linux --publish=never"
+  },
+  "devDependencies": {
+    "jsdom": "^29.1.1",
+    "electron": "^31.7.7",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.twagirumukiza.versorecto",
+    "productName": "Verso Recto",
+    "copyright": "Copyright © Innocent Twagirumukiza",
+    "files": [
+      "index.html",
+      "online-v39.html",
+      "styles.css",
+      "online-v39.css",
+      "game.js",
+      "online-v39.js",
+      "assets/**/*",
+      "electron/**/*",
+      "!tests/**",
+      "!.github/**"
+    ],
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png",
+      "category": "Game",
+      "maintainer": "Innocent Twagirumukiza <you@example.com>"
+    }
+  }
+}
