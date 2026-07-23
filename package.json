@@ -5,7 +5,7 @@
   "description": "Verso Recto — jeu de stratégie abstrait. Local (humain/IA) et multijoueur en ligne.",
   "author": {
     "name": "Innocent Twagirumukiza",
-    "email": "you@example.com"
+    "email": "inno.twa@gmail.com"
   },
   "homepage": "https://github.com/twagirumukiza/verso-recto-v54_1-desktop",
   "main": "electron/main.js",
@@ -76,7 +76,7 @@
       ],
       "icon": "build/icon.png",
       "category": "Game",
-      "maintainer": "Innocent Twagirumukiza <you@example.com>"
+      "maintainer": "Innocent Twagirumukiza <inno.twa@gmail.com>"
     }
   }
 }
