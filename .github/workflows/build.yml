@@ -1,5 +1,6 @@
 name: Build desktop apps
 
+# v2
 # Se déclenche :
 #  - automatiquement quand on pousse un tag de version (ex. v54.1.0)
 #  - manuellement depuis l'onglet "Actions" du dépôt (bouton "Run workflow")
