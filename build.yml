@@ -1,0 +1,86 @@
+name: Build desktop apps
+
+# Se déclenche :
+#  - automatiquement quand on pousse un tag de version (ex. v54.1.0)
+#  - manuellement depuis l'onglet "Actions" du dépôt (bouton "Run workflow")
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  # ---- Tests (rapides, ne bloquent pas le build si non nécessaire) ----
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: npm test
+
+  # ---- Construction des installeurs Windows et Linux ----
+  build:
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            script: dist:win
+            artifact-glob: |
+              release/*.exe
+          - os: ubuntu-latest
+            script: dist:linux
+            artifact-glob: |
+              release/*.AppImage
+              release/*.deb
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Installer les dépendances
+        run: npm install
+
+      - name: Construire l'application (${{ matrix.os }})
+        run: npm run ${{ matrix.script }}
+
+      - name: Publier les artefacts de build
+        uses: actions/upload-artifact@v4
+        with:
+          name: verso-recto-${{ matrix.os }}
+          path: ${{ matrix.artifact-glob }}
+          if-no-files-found: error
+
+  # ---- Création d'une release GitHub avec les installeurs, si on a poussé un tag ----
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Récupérer les artefacts Windows
+        uses: actions/download-artifact@v4
+        with:
+          name: verso-recto-windows-latest
+          path: dist
+
+      - name: Récupérer les artefacts Linux
+        uses: actions/download-artifact@v4
+        with:
+          name: verso-recto-ubuntu-latest
+          path: dist
+
+      - name: Créer la release GitHub
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          draft: false
+          generate_release_notes: true
